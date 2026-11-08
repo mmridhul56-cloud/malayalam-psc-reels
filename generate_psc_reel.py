@@ -90,7 +90,7 @@ def generate_psc_script() -> Dict[str, Any]:
       "section_tag": "എന്തുകൊണ്ട് ഇങ്ങനെ സംഭവിച്ചു?",
       "headline": "പ്രധാന കാരണം / പശ്ചാത്തലം",
       "highlight_answer": "പ്രധാന വർഷം / വ്യക്തി",
-      "bullet_points": ["കാരണം 1 ലളിതമായി", "കാരണം 2 ലളിതമായി"],
+      "bullet_points": ["காரണം 1 ലളിതമായി", "കാരണം 2 ലളിതമായി"],
       "voiceover": "അടുത്ത 12-15 സെക്കൻഡ് വായിക്കാനുള്ള വിശദീകരണം."
     }},
     {{
@@ -118,8 +118,16 @@ def generate_psc_script() -> Dict[str, Any]:
 }}
 """
 
-      response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt, config=types.GenerateContentConfig(response_mime_type="application/json", temperature=0.7))
-        data = json.loads(response.text)
+    response = client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            temperature=0.7,
+        ),
+    )
+
+    data = json.loads(response.text)
     if "topic" in data:
         save_used_topic(data["topic"])
     return data
