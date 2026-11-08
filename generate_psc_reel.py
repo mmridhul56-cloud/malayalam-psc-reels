@@ -119,7 +119,7 @@ def generate_psc_script() -> Dict[str, Any]:
 """
 
       response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt, config=types.GenerateContentConfig(response_mime_type="application/json", temperature=0.7))
-data = json.loads(response.text)
+    data = json.loads(response.text)
     if "topic" in data:
         save_used_topic(data["topic"])
     return data
