@@ -118,34 +118,8 @@ def generate_psc_script() -> Dict[str, Any]:
 }}
 """
 
-    candidate_models = ["gemini-3.8-flash", "gemini-3-flash-preview", "gemini-2.5-pro", "gemini-2.0-flash"]
-    try:
-    for m in client.models.list():
-        name = getattr(m, "name", "")
-            if "gemini" in name and ("flash" in name or "pro" in name) and not any(x in name for x in ["tts", "image", "embedding", "vision", "audio", "live"]):
-            short_name = name.replace("models/", "")
-            if short_name not in candidate_models and short_name != "gemini-2.5-flash":
-                candidate_models.insert(0, short_name)
-                except Exception as e:
-         print(f"Warning listing models: {e}")
-                
-    response = None
-    for model_name in candidate_models:
-       try:
-           print(f"Trying model: {model_name}")
-           response = client.models.generate_content(
-              model=model_name,
-              contents=prompt,
-              config=types.GenerateContentConfig(
-                  response_mime_type="application/json",
-                  temperature=0.7,
-              ),
-           )
-           if response and response.text:
-              break
-       except Exception as e:
-           print(f"Model {model_name} failed: {e}")
-           data = json.loads(response.text)
+      response = client.models.generate_content(model="gemini-3.8-flash", contents=prompt, config=types.GenerateContentConfig(response_mime_type="application/json", temperature=0.7))
+data = json.loads(response.text)
     if "topic" in data:
         save_used_topic(data["topic"])
     return data
