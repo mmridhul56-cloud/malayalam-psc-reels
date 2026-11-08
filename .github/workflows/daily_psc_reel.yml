@@ -11,14 +11,15 @@ permissions:
 jobs:
   build-daily-reel:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install FFmpeg & Malayalam Fonts
+      - name: Install FFmpeg & Malayalam/English Fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-smc-manjari fonts-noto-core libharfbuzz-bin
+          sudo apt-get install -y ffmpeg fonts-smc-manjari fonts-noto-core fonts-dejavu-core libharfbuzz-bin
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -28,7 +29,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install google-genai edge-tts Pillow requests
+          pip install google-genai edge-tts Pillow requests numpy scipy
 
       - name: Generate Malayalam PSC Explainer Video
         env:
@@ -39,7 +40,7 @@ jobs:
         run: |
           python generate_psc_reel.py
 
-      - name: Save updated topic history
+      - name: Save updated topic history to repository
         run: |
           if [ -f used_topics.json ]; then
             git config user.name "github-actions[bot]"
@@ -49,7 +50,7 @@ jobs:
             git push
           fi
 
-      - name: Upload Generated MP4 Reel
+      - name: Upload Generated MP4 Reel as downloadable artifact
         uses: actions/upload-artifact@v4
         with:
           name: daily-malayalam-psc-reel
